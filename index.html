@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VidShare - Share YouTube & TikTok Videos</title>
+    <meta name="description" content="Share YouTube and TikTok videos, get likes, subscribers and views. Join our community of video creators and enthusiasts.">
+    <style>
+        /* Base Styles & Variables */
+        :root {
+            --primary: #FF0000;
+            --secondary: #69C9D0;
+            --dark: #121212;
+            --light: #f8f9fa;
+            --gray: #2d2d2d;
+            --text-light: #ffffff;
+            --text-dark: #333333;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--text-light);
+            color: var(--text-light);
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--dark);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .logo span:first-child {
+            color: var(--primary);
+        }
+
+        .logo span:last-child {
+            color: var(--secondary);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-menu a {
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: var(--gray);
+            border-radius: 20px;
+            padding: 5px 15px;
+        }
+
+        .search-bar input {
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            padding: 8px;
+            width: 200px;
+            outline: none;
+        }
+
+        .user-menu {
+            position: relative;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background-color: var(--gray);
+            border-radius: 4px;
+            width: 200px;
+            box-shadow: var(--shadow);
+            display: none;
+            z-index: 100;
+        }
+
+        .dropdown-menu.active {
+            display: block;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 12px 15px;
+            transition: var(--transition);
+        }
+
+        .dropdown-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1611162617474-5b21e879e113?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 20px;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+        /* Video Grid */
+        .section-title {
+            font-size: 28px;
+            margin: 40px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
+            display: inline-block;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .video-card {
+            background-color: var(--gray);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .video-thumbnail {
+            position: relative;
+            height: 180px;
+            overflow: hidden;
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .video-card:hover .video-thumbnail img {
+            transform: scale(1.05);
+        }
+
+        .video-platform {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .video-info {
+            padding: 15px;
+        }
+
+        .video-title {
+            font-weight: 500;
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .video-creator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .creator-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .video-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        /* Profile Section */
+        .profile-section {
+            background-color: var(--gray);
+            border-radius: 8px;
+            padding: 30px;
+            margin: 40px 0;
+        }
+
+        .profile-header {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .profile-info h2 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        /* Share Video Form */
+        .share-video-form {
+            background-color: var(--gray);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 40px;
+        }
+
+        .form-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #444;
+            background-color: #1a1a1a;
+            color: var(--text-light);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        /* Ad Spaces */
+        .ad-space {
+            background-color: var(--gray);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin: 30px 0;
+            border: 1px dashed #555;
+        }
+
+        .ad-label {
+            font-size: 12px;
+            color: #aaa;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #0a0a0a;
+            padding: 50px 0 20px;
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: var(--text-light);
+        }
+
+        .footer-links a {
+            display: block;
+            margin-bottom: 10px;
+            color: #aaa;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .social-icon:hover {
+            background-color: var(--primary);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+            color: #777;
+            font-size: 14px;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero p {
+                font-size: 18px;
+            }
+            
+            .video-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .search-bar input {
+                width: 150px;
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero {
+                padding: 70px 0;
+            }
+            
+            .hero h1 {
+                font-size: 28px;
+            }
+            
+            .hero p {
+                font-size: 16px;
+            }
+            
+            .section-title {
+                font-size: 24px;
+            }
+            
+            .search-bar {
+                display: none;
+            }
+            
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <span>Vid</span><span>Share</span>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="#">Home</a>
+                <a href="#">Trending</a>
+                <a href="#">Categories</a>
+                <a href="#">About</a>
+            </nav>
+            
+            <div class="header-actions">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search videos...">
+                </div>
+                
+                <div class="user-menu">
+                    <div class="user-avatar">JS</div>
+                    <div class="dropdown-menu">
+                        <a href="#">My Profile</a>
+                        <a href="#">My Videos</a>
+                        <a href="#">Settings</a>
+                        <a href="#">Logout</a>
+                    </div>
+                </div>
+                
+                <div class="mobile-menu-btn">☰</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Share & Discover Amazing Videos</h1>
+            <p>Upload your YouTube and TikTok videos, connect with creators, and grow your audience with likes, views, and subscribers.</p>
+            <a href="#" class="btn btn-primary">Get Started</a>
+            <a href="#" class="btn btn-outline">Learn More</a>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Ad Space -->
+        <div class="ad-space">
+            <div class="ad-label">Advertisement</div>
+            <!-- Google AdSense Ad Unit -->
+            <div id="adsense-ad-unit-1">
+                <!-- AdSense code will be inserted here -->
+                <p>AdSense Advertisement</p>
+            </div>
+        </div>
+
+        <!-- Trending Videos -->
+        <h2 class="section-title">Trending Videos</h2>
+        <div class="video-grid">
+            <!-- Video Card 1 -->
+            <div class="video-card">
+                <div class="video-thumbnail">
+                    <img src="https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Video Thumbnail">
+                    <div class="video-platform" style="background-color: var(--primary);">YouTube</div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Amazing Dance Performance That Went Viral</h3>
+                    <div class="video-creator">
+                        <div class="creator-avatar">DC</div>
+                        <span>Dance Crew</span>
+                    </div>
+                    <div class="video-stats">
+                        <span>1.2M views</span>
+                        <span>45K likes</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video Card 2 -->
+            <div class="video-card">
+                <div class="video-thumbnail">
+                    <img src="https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" alt="Video Thumbnail">
+                    <div class="video-platform" style="background-color: var(--secondary);">TikTok</div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Funny Cat Compilation That Will Make You Laugh</h3>
+                    <div class="video-creator">
+                        <div class="creator-avatar">FP</div>
+                        <span>Funny Pets</span>
+                    </div>
+                    <div class="video-stats">
+                        <span>850K views</span>
+                        <span>32K likes</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video Card 3 -->
+            <div class="video-card">
+                <div class="video-thumbnail">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" alt="Video Thumbnail">
+                    <div class="video-platform" style="background-color: var(--primary);">YouTube</div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Cooking Tutorial: How to Make Perfect Pasta</h3>
+                    <div class="video-creator">
+                        <div class="creator-avatar">CC</div>
+                        <span>Chef's Corner</span>
+                    </div>
+                    <div class="video-stats">
+                        <span>520K views</span>
+                        <span>18K likes</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video Card 4 -->
+            <div class="video-card">
+                <div class="video-thumbnail">
+                    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Video Thumbnail">
+                    <div class="video-platform" style="background-color: var(--secondary);">TikTok</div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Workout Routine That Transformed My Body</h3>
+                    <div class="video-creator">
+                        <div class="creator-avatar">FG</div>
+                        <span>Fitness Guru</span>
+                    </div>
+                    <div class="video-stats">
+                        <span>1.5M views</span>
+                        <span>67K likes</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ad Space -->
+        <div class="ad-space">
+            <div class="ad-label">Advertisement</div>
+            <!-- Google AdSense Ad Unit -->
+            <div id="adsense-ad-unit-2">
+                <!-- AdSense code will be inserted here -->
+                <p>AdSense Advertisement</p>
+            </div>
+        </div>
+
+        <!-- User Profile Section -->
+        <div class="profile-section">
+            <div class="profile-header">
+                <div class="profile-avatar">JS</div>
+                <div class="profile-info">
+                    <h2>John Smith</h2>
+                    <p>Content Creator | Sharing amazing videos since 2020</p>
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">125</div>
+                            <div class="stat-label">Videos</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">45K</div>
+                            <div class="stat-label">Followers</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">1.2M</div>
+                            <div class="stat-label">Likes</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Share Video Form -->
+            <div class="share-video-form">
+                <h3 class="form-title">Share a New Video</h3>
+                <form id="video-share-form">
+                    <div class="form-group">
+                        <label for="video-url">Video URL (YouTube or TikTok)</label>
+                        <input type="url" id="video-url" class="form-control" placeholder="Paste your video link here" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="video-title">Video Title</label>
+                        <input type="text" id="video-title" class="form-control" placeholder="Enter a catchy title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="video-description">Description</label>
+                        <textarea id="video-description" class="form-control" rows="3" placeholder="Describe your video"></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="video-category">Category</label>
+                            <select id="video-category" class="form-control">
+                                <option value="entertainment">Entertainment</option>
+                                <option value="education">Education</option>
+                                <option value="music">Music</option>
+                                <option value="sports">Sports</option>
+                                <option value="comedy">Comedy</option>
+                                <option value="lifestyle">Lifestyle</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="video-tags">Tags</label>
+                            <input type="text" id="video-tags" class="form-control" placeholder="Add relevant tags (comma separated)">
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Share Video</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Recent Videos -->
+        <h2 class="section-title">My Recent Videos</h2>
+        <div class="video-grid">
+            <!-- Video Card 5 -->
+            <div class="video-card">
+                <div class="video-thumbnail">
+                    <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Video Thumbnail">
+                    <div class="video-platform" style="background-color: var(--primary);">YouTube</div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Festival Vlog: My Unforgettable Experience</h3>
+                    <div class="video-creator">
+                        <div class="creator-avatar">JS</div>
+                        <span>John Smith</span>
+                    </div>
+                    <div class="video-stats">
+                        <span>120K views</span>
+                        <span>5.2K likes</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video Card 6 -->
+            <div class="video-card">
+                <div class="video-thumbnail">
+                    <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1172&q=80" alt="Video Thumbnail">
+                    <div class="video-platform" style="background-color: var(--secondary);">TikTok</div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Quick Recipe: 5-Minute Breakfast Ideas</h3>
+                    <div class="video-creator">
+                        <div class="creator-avatar">JS</div>
+                        <span>John Smith</span>
+                    </div>
+                    <div class="video-stats">
+                        <span>85K views</span>
+                        <span>3.8K likes</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>VidShare</h3>
+                    <p>The best platform to share and discover YouTube and TikTok videos. Connect with creators worldwide.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-icon">f</a>
+                        <a href="#" class="social-icon">t</a>
+                        <a href="#" class="social-icon">in</a>
+                        <a href="#" class="social-icon">ig</a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <div class="footer-links">
+                        <a href="#">Home</a>
+                        <a href="#">Trending</a>
+                        <a href="#">Categories</a>
+                        <a href="#">About Us</a>
+                        <a href="#">Contact</a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Categories</h3>
+                    <div class="footer-links">
+                        <a href="#">Music</a>
+                        <a href="#">Sports</a>
+                        <a href="#">Gaming</a>
+                        <a href="#">Comedy</a>
+                        <a href="#">Education</a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Legal</h3>
+                    <div class="footer-links">
+                        <a href="#">Terms of Service</a>
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Cookie Policy</a>
+                        <a href="#">DMCA</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 VidShare. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Toggle User Dropdown Menu
+        document.querySelector('.user-avatar').addEventListener('click', function() {
+            document.querySelector('.dropdown-menu').classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.querySelector('.dropdown-menu');
+            const avatar = document.querySelector('.user-avatar');
+            
+            if (!avatar.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        // Handle Video Share Form Submission
+        document.getElementById('video-share-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const url = document.getElementById('video-url').value;
+            const title = document.getElementById('video-title').value;
+            const description = document.getElementById('video-description').value;
+            const category = document.getElementById('video-category').value;
+            const tags = document.getElementById('video-tags').value;
+            
+            // Validate URL (basic check for YouTube or TikTok)
+            if (!url.includes('youtube.com') && !url.includes('youtu.be') && !url.includes('tiktok.com')) {
+                alert('Please enter a valid YouTube or TikTok URL');
+                return;
+            }
+            
+            // In a real application, you would send this data to your server
+            // For now, we'll just show a success message
+            alert('Video shared successfully! It will appear on the homepage after approval.');
+            
+            // Reset form
+            this.reset();
+        });
+
+        // Mobile Menu Toggle
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            document.querySelector('.nav-menu').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>
